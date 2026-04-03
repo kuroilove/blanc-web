@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "portfolio": "ポートフォリオ",
+    "commission": "コミッション",
+    "store": "ストア",
+    "contact": "お問い合わせ"
+  },
+  "footer": {
+    "copyright": "© 2026 MontBlanc — All rights reserved"
+  },
+  "portfolio": {
+    "noWorks": "作品が見つかりませんでした。"
+  },
+  "commission": {
+    "title": "コミッション",
+    "schedule": "スケジュール",
+    "legend": {
+      "available": "受付中",
+      "contact": "要相談",
+      "closed": "受付終了"
+    },
+    "offering": {
+      "title": "受付内容",
+      "illustration": "イラスト",
+      "character": "キャラクターデザイン",
+      "commercial": "商業利用",
+      "fromPrice": "$XX〜",
+      "inquire": "お問い合わせください"
+    },
+    "process": {
+      "title": "進め方",
+      "step1": "お問い合わせフォームよりご連絡ください",
+      "step2": "3営業日以内にお見積もりをお送りします",
+      "step3": "作業開始前に50%の前払いをお願いします",
+      "step4": "ラフ → 修正 → 納品"
+    }
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "name": "お名前",
+    "namePlaceholder": "お名前を入力してください",
+    "email": "メールアドレス",
+    "emailPlaceholder": "your@email.com",
+    "subject": "お問い合わせ種別",
+    "subjectDefault": "種別を選択してください",
+    "subjectCommission": "コミッションのご依頼",
+    "subjectCommercial": "商業利用",
+    "subjectOther": "その他",
+    "message": "メッセージ",
+    "messagePlaceholder": "ご依頼内容をお聞かせください...",
+    "send": "送信"
+  },
+  "store": {
+    "title": "ストア",
+    "items": "商品",
+    "whereToFind": "購入先",
+    "footer1": "すべての商品は自ら制作したオリジナル作品です。",
+    "footer2": "商業ライセンスや大量注文はお問い合わせフォームよりご連絡ください。"
+  }
+}

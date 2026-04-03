@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "portfolio": "作品集",
+    "commission": "约稿",
+    "store": "商店",
+    "contact": "联系"
+  },
+  "footer": {
+    "copyright": "© 2026 MontBlanc — All rights reserved"
+  },
+  "portfolio": {
+    "noWorks": "未找到作品。"
+  },
+  "commission": {
+    "title": "约稿",
+    "schedule": "日程",
+    "legend": {
+      "available": "接单中",
+      "contact": "需咨询",
+      "closed": "暂停接单"
+    },
+    "offering": {
+      "title": "服务内容",
+      "illustration": "插画",
+      "character": "角色设计",
+      "commercial": "商业用途",
+      "fromPrice": "$XX起",
+      "inquire": "请咨询"
+    },
+    "process": {
+      "title": "流程",
+      "step1": "通过联系表单提交委托",
+      "step2": "3个工作日内回复报价",
+      "step3": "开始前支付50%定金",
+      "step4": "草稿 → 修改 → 最终交付"
+    }
+  },
+  "contact": {
+    "title": "联系",
+    "name": "姓名",
+    "namePlaceholder": "请输入您的姓名",
+    "email": "邮箱",
+    "emailPlaceholder": "your@email.com",
+    "subject": "咨询类型",
+    "subjectDefault": "请选择类型",
+    "subjectCommission": "约稿咨询",
+    "subjectCommercial": "商业用途",
+    "subjectOther": "其他",
+    "message": "留言",
+    "messagePlaceholder": "请描述您的需求...",
+    "send": "发送"
+  },
+  "store": {
+    "title": "商店",
+    "items": "商品",
+    "whereToFind": "购买渠道",
+    "footer1": "所有商品均为本人原创设计制作。",
+    "footer2": "商业授权或批量订购请通过联系表单咨询。"
+  }
+}

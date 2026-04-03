@@ -5,10 +5,11 @@ import { useState } from "react";
 export type Work = {
   id: number;
   title: string;
+  description: string;
   src: string;
 };
 
-export default function Gallery({ works }: { works: Work[] }) {
+export default function Gallery({ works, noWorksMessage }: { works: Work[]; noWorksMessage: string }) {
   const [selectedId, setSelectedId] = useState(works[0]?.id);
   const [loadedIds, setLoadedIds] = useState<Set<number>>(new Set());
   const selected = works.find((w) => w.id === selectedId) ?? works[0];
@@ -16,8 +17,8 @@ export default function Gallery({ works }: { works: Work[] }) {
 
   if (!works.length) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-gray-400 text-sm">
-        No works found.
+      <div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-gray-500 text-sm">
+        {noWorksMessage}
       </div>
     );
   }
@@ -27,7 +28,7 @@ export default function Gallery({ works }: { works: Work[] }) {
 
       {/* Grey pulse shown while current image is still loading */}
       {!currentLoaded && (
-        <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+        <div className="absolute inset-0 bg-white/5 animate-pulse" />
       )}
 
       {/* All images stacked — each loads once and stays in the DOM */}
@@ -38,15 +39,18 @@ export default function Gallery({ works }: { works: Work[] }) {
           src={work.src}
           alt={work.title}
           onLoad={() => setLoadedIds((prev) => new Set(prev).add(work.id))}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${
             work.id === selectedId && loadedIds.has(work.id) ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
 
-      {/* Title — bottom left, appears on hover */}
-      <div className="absolute bottom-8 left-8 opacity-0 group-hover/gallery:opacity-100 transition-opacity duration-300">
-        <p className="text-white text-sm tracking-widest uppercase">{selected.title}</p>
+      {/* Title + description — bottom left, appears on hover */}
+      <div className="absolute bottom-8 left-8 max-w-sm opacity-0 group-hover/gallery:opacity-100 transition-opacity duration-300">
+        <p className="text-white text-sm tracking-widest uppercase mb-1">{selected.title}</p>
+        {selected.description && (
+          <p className="text-white/70 text-xs leading-relaxed whitespace-pre-line">{selected.description}</p>
+        )}
       </div>
 
       {/* Right sidebar — appears on hover */}

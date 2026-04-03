@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "portfolio": "포트폴리오",
+    "commission": "커미션",
+    "store": "스토어",
+    "contact": "문의"
+  },
+  "footer": {
+    "copyright": "© 2026 MontBlanc — All rights reserved"
+  },
+  "portfolio": {
+    "noWorks": "작품을 찾을 수 없습니다."
+  },
+  "commission": {
+    "title": "커미션",
+    "schedule": "스케줄",
+    "legend": {
+      "available": "가능",
+      "contact": "문의 필요",
+      "closed": "마감"
+    },
+    "offering": {
+      "title": "작업 종류",
+      "illustration": "일러스트",
+      "character": "캐릭터 디자인",
+      "commercial": "상업적 사용",
+      "fromPrice": "$XX~",
+      "inquire": "문의 바랍니다"
+    },
+    "process": {
+      "title": "진행 방식",
+      "step1": "문의 폼을 통해 신청해 주세요",
+      "step2": "3 영업일 이내에 견적을 보내드립니다",
+      "step3": "작업 시작 전 50% 선결제",
+      "step4": "스케치 → 수정 → 최종 납품"
+    }
+  },
+  "contact": {
+    "title": "문의",
+    "name": "이름",
+    "namePlaceholder": "이름을 입력해 주세요",
+    "email": "이메일",
+    "emailPlaceholder": "your@email.com",
+    "subject": "문의 유형",
+    "subjectDefault": "유형을 선택해 주세요",
+    "subjectCommission": "커미션 문의",
+    "subjectCommercial": "상업적 사용",
+    "subjectOther": "기타",
+    "message": "내용",
+    "messagePlaceholder": "작업에 대해 알려주세요...",
+    "send": "보내기"
+  },
+  "store": {
+    "title": "스토어",
+    "items": "상품",
+    "whereToFind": "구매처",
+    "footer1": "모든 상품은 직접 디자인하고 제작했습니다.",
+    "footer2": "상업적 라이선스나 대량 주문은 문의 폼을 이용해 주세요."
+  }
+}
