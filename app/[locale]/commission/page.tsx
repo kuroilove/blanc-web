@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { google } from "googleapis";
 import { getTranslations } from "next-intl/server";
-
-export const runtime = 'edge';
 import { makeAuth, resolveDescriptions } from "../../lib/google";
 
 export const metadata: Metadata = {

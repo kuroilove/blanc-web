@@ -2,7 +2,6 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { google } from "googleapis";
 
-export const runtime = 'edge';
 import Gallery, { type Work } from "../../_components/Gallery";
 import { getTranslations } from "next-intl/server";
 import { makeAuth, resolveDescriptions } from "../../lib/google";

@@ -2,7 +2,6 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-export const runtime = 'edge';
 import { google } from "googleapis";
 import { makeAuth, resolveDescriptions } from "../../lib/google";
 import AboutCarousel from "../../_components/AboutCarousel";

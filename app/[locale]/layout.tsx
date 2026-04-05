@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-export const runtime = 'edge';
 import { Geist } from "next/font/google";
 import "../globals.css";
 import Link from "next/link";
