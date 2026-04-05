@@ -52,7 +52,7 @@ const fetchAboutData = cache(async (locale: string) => {
         .map((r) => r[0]?.trim())
         .filter(Boolean)
         .map((filename) => `${r2Url}/${encodeURIComponent(filename)}`);
-    } catch { /* no portfolio sheet yet */ }
+    } catch (e) { console.error('Google Sheets error (about):', e); }
   }
 
   // ── About sheet: A=field, B=ko, C=en, D=ja, E=zh ────────────────────────
@@ -79,7 +79,7 @@ const fetchAboutData = cache(async (locale: string) => {
       );
       bioText = resolved[0] ?? "";
     }
-  } catch { /* sheet not yet created */ }
+  } catch (e) { console.error('Google Sheets error (sheet):', e); }
 
   // ── Social sheet: A=platform, B=url ─────────────────────────────────────
   let socials: SocialLink[] = [];
@@ -91,7 +91,7 @@ const fetchAboutData = cache(async (locale: string) => {
     socials = ((res.data.values ?? []) as string[][])
       .filter((r) => r[0] && r[1])
       .map((r) => ({ platform: r[0].trim(), url: r[1].trim() }));
-  } catch { /* sheet not yet created */ }
+  } catch (e) { console.error('Google Sheets error (sheet):', e); }
 
   // ── Timeline sheet: A=year, B=ko, C=en, D=ja, E=zh ──────────────────────
   let timeline: TimelineEntry[] = [];
@@ -117,7 +117,7 @@ const fetchAboutData = cache(async (locale: string) => {
       year:        row[0] ?? "",
       description: descriptions[i] ?? "",
     }));
-  } catch { /* sheet not yet created */ }
+  } catch (e) { console.error('Google Sheets error (sheet):', e); }
 
   return { images, bio: bioText, socials, timeline };
 });
