@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { getAccessToken, sheetsGet, resolveDescriptions } from "../../lib/google";
+import { fetchNews } from "../../lib/news";
 import AboutCarousel from "../../_components/AboutCarousel";
+import NewsStrip from "../../_components/NewsStrip";
 
 // ── icon labels for social platforms ─────────────────────────────────────────
 const PLATFORM_LABEL: Record<string, string> = {
@@ -118,7 +120,10 @@ export default async function AboutPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "about" });
-  const { images, bio, socials, timeline } = await fetchAboutData(locale);
+  const [{ images, bio, socials, timeline }, news] = await Promise.all([
+    fetchAboutData(locale),
+    fetchNews(locale),
+  ]);
 
   return (
     <div>
@@ -129,6 +134,13 @@ export default async function AboutPage({
         </h1>
         <AboutCarousel images={images} />
       </div>
+
+      {/* ── News strip ── */}
+      {news.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 md:px-8 pb-4">
+          <NewsStrip items={news} />
+        </div>
+      )}
 
       {/* ── Content: socials left | bio + timeline right ── */}
       <div className="max-w-5xl mx-auto px-4 md:px-8 py-14 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import ContactForm from "../../_components/ContactForm";
+import { fetchNews } from "../../lib/news";
+import NewsStrip from "../../_components/NewsStrip";
 
 
 export const metadata: Metadata = {
@@ -18,7 +20,10 @@ export const metadata: Metadata = {
 
 export default async function Contact({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "contact" });
+  const [t, news] = await Promise.all([
+    getTranslations({ locale, namespace: "contact" }),
+    fetchNews(locale),
+  ]);
 
   const translations = {
     name:               t("name"),
@@ -52,6 +57,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
   return (
     <div className="max-w-xl mx-auto px-4 md:px-8 py-16">
       <h1 className="text-2xl font-semibold mb-8">{t("title")}</h1>
+      {news.length > 0 && <div className="mb-8"><NewsStrip items={news} /></div>}
       <ContactForm t={translations} />
     </div>
   );

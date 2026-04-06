@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getAccessToken, sheetsGet, resolveDescriptions } from "../../lib/google";
+import { fetchNews } from "../../lib/news";
+import NewsStrip from "../../_components/NewsStrip";
 
 export const metadata: Metadata = {
   title:       "Store",
@@ -102,14 +104,16 @@ async function getStoreLinks(locale: string): Promise<StoreLink[]> {
 export default async function Store({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "store" });
-  const [items, storeLinks] = await Promise.all([
+  const [items, storeLinks, news] = await Promise.all([
     getStoreItems(locale),
     getStoreLinks(locale),
+    fetchNews(locale),
   ]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-8 py-16 space-y-16">
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
+      {news.length > 0 && <NewsStrip items={news} />}
 
       {items.length > 0 && (
         <div className="space-y-4">
@@ -143,28 +147,30 @@ export default async function Store({ params }: { params: Promise<{ locale: stri
         </div>
       )}
 
-      <div className="space-y-4">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-white/50">
-          {t("whereToFind")}
-        </h2>
-        <div className="divide-y divide-white/10">
-          {storeLinks.map((store) => (
-            <a
-              key={store.name}
-              href={store.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex justify-between items-center py-4 group"
-            >
-              <div>
-                <p className="text-sm font-medium group-hover:underline">{store.name}</p>
-                <p className="text-xs text-white/50 mt-0.5">{store.description}</p>
-              </div>
-              <span className="text-white/20 group-hover:text-white transition-colors text-lg">→</span>
-            </a>
-          ))}
+      {storeLinks.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/50">
+            {t("whereToFind")}
+          </h2>
+          <div className="divide-y divide-white/10">
+            {storeLinks.map((store) => (
+              <a
+                key={store.name}
+                href={store.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex justify-between items-center py-4 group"
+              >
+                <div>
+                  <p className="text-sm font-medium group-hover:underline">{store.name}</p>
+                  <p className="text-xs text-white/50 mt-0.5">{store.description}</p>
+                </div>
+                <span className="text-white/20 group-hover:text-white transition-colors text-lg">→</span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="text-xs text-white/50 space-y-1">
         <p>{t("footer1")}</p>

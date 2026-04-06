@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getAccessToken, sheetsGet, resolveDescriptions } from "../../lib/google";
+import { fetchNews } from "../../lib/news";
+import NewsStrip from "../../_components/NewsStrip";
 
 export const metadata: Metadata = {
   title:       "Commissions",
@@ -156,16 +158,18 @@ function ScheduleGrid({ table }: { table: ScheduleTable }) {
 export default async function Commission({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "commission" });
-  const [schedules, offerings, steps] = await Promise.all([
+  const [schedules, offerings, steps, news] = await Promise.all([
     getSchedules(),
     getOfferings(locale),
     getProcess(locale),
+    fetchNews(locale),
   ]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-8 py-16 space-y-12">
 
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
+      {news.length > 0 && <NewsStrip items={news} />}
 
       {/* Schedule tables */}
       <div className="space-y-6">
