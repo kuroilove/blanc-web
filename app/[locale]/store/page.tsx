@@ -66,19 +66,49 @@ async function getStoreItems(locale: string): Promise<StoreItem[]> {
     });
 }
 
-const storeLinks = [
-  { name: "Etsy",      description: "Prints, stickers, and original works",  url: "https://etsy.com/shop/placeholder" },
-  { name: "Redbubble", description: "Apparel, accessories, and home goods",   url: "https://redbubble.com/people/placeholder" },
-  { name: "Booth",     description: "Doujinshi and limited edition items",    url: "https://placeholder.booth.pm" },
-];
+type StoreLink = { name: string; description: string; url: string };
+
+async function getStoreLinks(locale: string): Promise<StoreLink[]> {
+  const email      = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const sheetId    = process.env.GOOGLE_SHEETS_ID;
+  const deeplKey   = process.env.DEEPL_API_KEY;
+
+  if (!email || !privateKey || !sheetId) return [];
+
+  const token = await getAccessToken(email, privateKey);
+
+  let rows: string[][] = [];
+  try {
+    rows = await sheetsGet(token, sheetId, "StoreLinks!A2:F50");
+  } catch {
+    return [];
+  }
+
+  const descriptions = await resolveDescriptions(
+    rows, locale, 2, { en: "D", ja: "E", zh: "F" },
+    "StoreLinks", token, sheetId, deeplKey
+  );
+
+  return rows
+    .filter((r) => r[0]?.trim() && r[1]?.trim())
+    .map((row, i) => ({
+      name:        row[0].trim(),
+      url:         row[1].trim(),
+      description: descriptions[i] ?? "",
+    }));
+}
 
 export default async function Store({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "store" });
-  const items = await getStoreItems(locale);
+  const [items, storeLinks] = await Promise.all([
+    getStoreItems(locale),
+    getStoreLinks(locale),
+  ]);
 
   return (
-    <div className="max-w-5xl mx-auto px-8 py-16 space-y-16">
+    <div className="max-w-5xl mx-auto px-4 md:px-8 py-16 space-y-16">
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
 
       {items.length > 0 && (
