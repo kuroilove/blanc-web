@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
       messageKo ? { name: "Message (KO)", value: messageKo.slice(0, 1024) } : null,
     ].filter(Boolean);
 
-    fetch(discordWebhook, {
+    await fetch(discordWebhook, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
