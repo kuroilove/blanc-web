@@ -135,15 +135,8 @@ export default async function AboutPage({
         <AboutCarousel images={images} />
       </div>
 
-      {/* ── News strip ── */}
-      {news.length > 0 && (
-        <div className="max-w-5xl mx-auto px-4 md:px-8 pb-4">
-          <NewsStrip items={news} />
-        </div>
-      )}
-
-      {/* ── Content: socials left | bio + timeline right ── */}
-      <div className="max-w-5xl mx-auto px-4 md:px-8 py-14 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">
+      {/* ── Content: socials left | bio + timeline | news right ── */}
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-14 grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr_160px] gap-12 items-start">
 
         {/* Left — social links */}
         <aside className="space-y-2">
@@ -212,6 +205,13 @@ export default async function AboutPage({
           )}
 
         </div>
+
+        {/* News strip — right column (lg+), stacks below on smaller screens */}
+        {news.length > 0 && (
+          <aside className="lg:sticky lg:top-8">
+            <NewsStrip items={news} />
+          </aside>
+        )}
       </div>
     </div>
   );

@@ -1,28 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import type { NewsItem } from "../lib/news";
 
 export default function NewsStrip({ items }: { items: NewsItem[] }) {
-  const [activeIdx,  setActiveIdx]  = useState(0);
-  const [modalItem,  setModalItem]  = useState<NewsItem | null>(null);
-  const containerRef   = useRef<HTMLDivElement>(null);
-  const pausedRef      = useRef(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [modalItem, setModalItem] = useState<NewsItem | null>(null);
 
   // Auto-advance
   useEffect(() => {
     if (items.length <= 1) return;
     const id = setInterval(() => {
-      if (pausedRef.current) return;
-      setActiveIdx((prev) => {
-        const next = (prev + 1) % items.length;
-        const container = containerRef.current;
-        if (container) {
-          const card = container.children[next] as HTMLElement | undefined;
-          card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-        }
-        return next;
-      });
+      setActiveIdx((i) => (i + 1) % items.length);
     }, 4000);
     return () => clearInterval(id);
   }, [items.length]);
@@ -37,42 +26,39 @@ export default function NewsStrip({ items }: { items: NewsItem[] }) {
 
   if (!items.length) return null;
 
+  const active = items[activeIdx];
+
   return (
     <>
       <div className="space-y-2">
-        <div
-          ref={containerRef}
-          className="flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none"
-          onMouseEnter={() => { pausedRef.current = true; }}
-          onMouseLeave={() => { pausedRef.current = false; }}
-          onTouchStart={() => { pausedRef.current = true; }}
+        {/* Single card — fades between items */}
+        <button
+          onClick={() => setModalItem(active)}
+          className="w-full text-left group relative"
         >
-          {items.map((item, i) => (
-            <button
-              key={i}
-              onClick={() => setModalItem(item)}
-              className="snap-start flex-shrink-0 w-28 md:w-36 text-left group"
-            >
-              <div className={`aspect-square overflow-hidden transition-opacity duration-500 ${
-                i === activeIdx ? "opacity-100" : "opacity-40"
-              }`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.src}
-                  alt=""
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              {item.text && (
-                <p className="text-xs text-white/50 mt-1 line-clamp-2 leading-snug">{item.text}</p>
-              )}
-            </button>
-          ))}
-        </div>
+          <div className="aspect-square w-full overflow-hidden bg-white/5 relative">
+            {items.map((item, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={i}
+                src={item.src}
+                alt=""
+                className={`absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105 ${
+                  i === activeIdx ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
+          </div>
+          {active.text && (
+            <p className="text-xs text-white/50 mt-2 line-clamp-3 leading-snug text-left">
+              {active.text}
+            </p>
+          )}
+        </button>
 
         {/* Dots */}
         {items.length > 1 && (
-          <div className="flex gap-1.5 justify-center">
+          <div className="flex gap-1.5 justify-center pt-1">
             {items.map((_, i) => (
               <button
                 key={i}
@@ -101,7 +87,7 @@ export default function NewsStrip({ items }: { items: NewsItem[] }) {
             <img
               src={modalItem.src}
               alt=""
-              className="w-full max-h-64 object-contain bg-black"
+              className="w-full max-h-72 object-contain bg-black"
             />
             <div className="p-5 space-y-3">
               {modalItem.text && (

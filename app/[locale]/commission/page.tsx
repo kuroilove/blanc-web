@@ -166,10 +166,10 @@ export default async function Commission({ params }: { params: Promise<{ locale:
   ]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-8 py-16 space-y-12">
-
+    <div className="max-w-4xl mx-auto px-4 md:px-8 py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_160px] gap-12 items-start">
+      <div className="space-y-12">
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
-      {news.length > 0 && <NewsStrip items={news} />}
 
       {/* Schedule tables */}
       <div className="space-y-6">
@@ -217,7 +217,14 @@ export default async function Commission({ params }: { params: Promise<{ locale:
           ))}
         </ol>
       </div>
+      </div>
 
+      {news.length > 0 && (
+        <aside className="lg:sticky lg:top-8">
+          <NewsStrip items={news} />
+        </aside>
+      )}
+      </div>
     </div>
   );
 }

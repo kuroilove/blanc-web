@@ -55,10 +55,19 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 md:px-8 py-16">
+    <div className="max-w-3xl mx-auto px-4 md:px-8 py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_160px] gap-12 items-start">
+      <div>
       <h1 className="text-2xl font-semibold mb-8">{t("title")}</h1>
-      {news.length > 0 && <div className="mb-8"><NewsStrip items={news} /></div>}
       <ContactForm t={translations} />
+      </div>
+
+      {news.length > 0 && (
+        <aside className="lg:sticky lg:top-8">
+          <NewsStrip items={news} />
+        </aside>
+      )}
+      </div>
     </div>
   );
 }

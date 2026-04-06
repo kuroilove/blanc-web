@@ -111,9 +111,10 @@ export default async function Store({ params }: { params: Promise<{ locale: stri
   ]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 md:px-8 py-16 space-y-16">
+    <div className="max-w-5xl mx-auto px-4 md:px-8 py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_160px] gap-12 items-start">
+      <div className="space-y-16">
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
-      {news.length > 0 && <NewsStrip items={news} />}
 
       {items.length > 0 && (
         <div className="space-y-4">
@@ -175,6 +176,14 @@ export default async function Store({ params }: { params: Promise<{ locale: stri
       <div className="text-xs text-white/50 space-y-1">
         <p>{t("footer1")}</p>
         <p>{t("footer2")}</p>
+      </div>
+      </div>
+
+      {news.length > 0 && (
+        <aside className="lg:sticky lg:top-8">
+          <NewsStrip items={news} />
+        </aside>
+      )}
       </div>
     </div>
   );
