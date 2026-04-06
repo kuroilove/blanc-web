@@ -1,20 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { NewsItem } from "../lib/news";
 
-export default function NewsStrip({ items }: { items: NewsItem[] }) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [modalItem, setModalItem] = useState<NewsItem | null>(null);
+const CARD_H  = 150; // px — card height (square-ish)
+const GAP     = 6;   // px — gap between cards
+const STEP    = CARD_H + GAP;
+const VISIBLE = 3.5; // how many cards show at once
 
-  // Auto-advance
+export default function NewsStrip({ items }: { items: NewsItem[] }) {
+  const [offset,       setOffset]       = useState(0);
+  const [animated,     setAnimated]     = useState(true);
+  const [modalItem,    setModalItem]    = useState<NewsItem | null>(null);
+  const pausedRef = useRef(false);
+
+  // Duplicate items so the loop is seamless
+  const looped = items.length >= 2 ? [...items, ...items] : items;
+
+  // Auto-scroll down one card every 2.5s
   useEffect(() => {
     if (items.length <= 1) return;
     const id = setInterval(() => {
-      setActiveIdx((i) => (i + 1) % items.length);
-    }, 4000);
+      if (pausedRef.current) return;
+      setOffset((prev) => prev + 1);
+    }, 2500);
     return () => clearInterval(id);
   }, [items.length]);
+
+  // When we reach the end of the first copy, jump back silently
+  useEffect(() => {
+    if (offset >= items.length) {
+      const t = setTimeout(() => {
+        setAnimated(false);
+        setOffset(0);
+        setTimeout(() => setAnimated(true), 50);
+      }, 650);
+      return () => clearTimeout(t);
+    }
+  }, [offset, items.length]);
 
   // ESC closes modal
   useEffect(() => {
@@ -26,51 +49,46 @@ export default function NewsStrip({ items }: { items: NewsItem[] }) {
 
   if (!items.length) return null;
 
-  const active = items[activeIdx];
-
   return (
     <>
-      <div className="space-y-2">
-        {/* Single card — fades between items */}
-        <button
-          onClick={() => setModalItem(active)}
-          className="w-full text-left group relative"
+      {/* Ticker container */}
+      <div
+        style={{ height: `${VISIBLE * STEP}px` }}
+        className="overflow-hidden"
+        onMouseEnter={() => { pausedRef.current = true; }}
+        onMouseLeave={() => { pausedRef.current = false; }}
+        onTouchStart={() => { pausedRef.current = true; }}
+        onTouchEnd={() => { pausedRef.current = false; }}
+      >
+        <div
+          style={{
+            transform:  `translateY(-${offset * STEP}px)`,
+            transition: animated ? "transform 0.6s ease" : "none",
+          }}
         >
-          <div className="aspect-square w-full overflow-hidden bg-white/5 relative">
-            {items.map((item, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
+          {looped.map((item, i) => (
+            <button
+              key={i}
+              onClick={() => setModalItem(item)}
+              style={{ height: CARD_H, marginBottom: GAP }}
+              className="w-full block text-left group overflow-hidden relative"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                key={i}
                 src={item.src}
                 alt=""
-                className={`absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105 ${
-                  i === activeIdx ? "opacity-100" : "opacity-0"
-                }`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            ))}
-          </div>
-          {active.text && (
-            <p className="text-xs text-white/50 mt-2 line-clamp-3 leading-snug text-left">
-              {active.text}
-            </p>
-          )}
-        </button>
-
-        {/* Dots */}
-        {items.length > 1 && (
-          <div className="flex gap-1.5 justify-center pt-1">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveIdx(i)}
-                aria-label={`News item ${i + 1}`}
-                className={`w-1 h-1 rounded-full transition-colors ${
-                  i === activeIdx ? "bg-white/50" : "bg-white/15"
-                }`}
-              />
-            ))}
-          </div>
-        )}
+              {/* text overlay on hover */}
+              {item.text && (
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent
+                                px-2 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <p className="text-xs text-white/90 line-clamp-2 leading-snug">{item.text}</p>
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Detail overlay */}
