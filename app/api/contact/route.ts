@@ -100,5 +100,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false }, { status: 500 });
   }
 
+  // Discord notification (best-effort — don't fail the request if it errors)
+  const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
+  if (discordWebhook) {
+    const fields = [
+      { name: "Name",    value: name,                               inline: true },
+      { name: "Email",   value: email,                              inline: true },
+      { name: "Subject", value: subjectLabels[subject] ?? subject,  inline: true },
+      companyName ? { name: "Company",  value: companyName,  inline: true } : null,
+      phone       ? { name: "Phone",    value: phone,        inline: true } : null,
+      budget      ? { name: "Budget",   value: budget,       inline: true } : null,
+      dueDate     ? { name: "Due Date", value: dueDate,      inline: true } : null,
+      { name: "Display Rights", value: displayRights ? "✓ Permitted" : "✗ Not permitted", inline: true },
+      { name: "Message", value: message.slice(0, 1024) },
+    ].filter(Boolean);
+
+    fetch(discordWebhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        embeds: [{
+          title: "New Inquiry — MontBlanc",
+          color: 0xffffff,
+          fields,
+        }],
+      }),
+    }).catch((err) => console.error("Discord notify error:", err));
+  }
+
   return NextResponse.json({ success: true });
 }
